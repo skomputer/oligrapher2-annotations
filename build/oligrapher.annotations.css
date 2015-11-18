@@ -1,0 +1,134 @@
+#oligrapherGraphContainer {
+  position: relative;
+  margin-top: 10px;
+}
+
+#zoomButtons {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+#zoomOut {
+  margin-top: 5px;
+}
+
+#zoomButtons button {
+  display: block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0px solid #ddd;
+  cursor: pointer;
+  padding: 0px;
+  color: #666;
+  font-size: 16px;
+}
+
+#zoomButtons button:focus {
+  outline: none;
+}
+
+#oligrapherTitle {
+  font-size: 50px;
+  font-weight: 300;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+#oligrapherDate {
+  color: #888;
+}
+
+#oligrapherGraph {
+  border: 1px solid #f8f8f8;
+}
+
+#oligrapherNavButtons {
+  margin-top: 5px;
+  margin-bottom: 25px;
+}
+
+#oligrapherNavButtons button:not(#oligrapherNavListButton) {
+  margin-right: 10px;
+  font-size: 24px;
+  font-weight: 200;
+  border: 0 solid #eee;
+  background-color: #eee;
+
+  &:disabled {
+    color: #ccc;
+    background-color: #f8f8f8;
+    opacity: 1;
+  }
+}
+
+.clickplz:enabled:not(:focus) {
+  animation: clickplz 3s;
+  -webkit-animation: clickplz 3s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@keyframes clickplz {
+  0%   { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+  50%  { color: #666; background-color:#ffd; text-shadow: 0 0 9px rgba(255,255,128,0.75); }
+  100% { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+}
+
+@-webkit-keyframes clickplz {
+  0%   { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+  50%  { color: #666; background-color:#ffd; text-shadow: 0 0 9px rgba(255,255,128,0.75); }
+  100% { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+}
+
+button#oligrapherNavListButton {
+  margin-right: 10px;
+  font-size: 24px;
+  font-weight: 200;
+}
+
+ul#oligrapherAnnotationList {
+  padding: 0;
+  list-style-type: none;
+}
+
+ul#oligrapherAnnotationList li {
+  font-size: 18px;
+  line-height: 34px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 3px;
+}
+
+ul#oligrapherAnnotationList li.active {
+  background-color: #eee;
+}
+
+#oligrapherCreateGraphAnnotationButton {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+#oligrapherGraphAnnotationEditButton {
+  margin-top: 10px;
+}
+
+#oligrapherGraphAnnotationForm textarea {
+  margin-bottom: 10px;
+}
+
+#oligrapherGraphAnnotationFormText {
+  height: 400px;
+}
