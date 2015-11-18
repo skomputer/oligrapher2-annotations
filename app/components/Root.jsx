@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { loadAnnotations, showAnnotation, updateAnnotation, 
-         deleteAnnotation, reorderAnnotations, createAnnotation } from '../actions';
+         deleteAnnotation, createAnnotation, moveAnnotation } from '../actions';
 import { HotKeys } from 'react-hotkeys';
 import BaseComponent from './BaseComponent';
 import ZoomButtons from './ZoomButtons';
@@ -36,11 +36,7 @@ export default class Root extends BaseComponent {
     let swapList = () => this._swapNavList();
     let show = (id) => this._show(id);
     let create = () => dispatch(createAnnotation());
-    let reorder = (ids) => { 
-      let currentIds = annotations.map(a => a.id);
-      let indexes = ids.map(id => currentIds.indexOf(id));
-      dispatch(reorderAnnotations(ids, indexes));
-    };
+    let move = (from, to) => dispatch(moveAnnotation(from, to));
 
     let { zoomIn, zoomOut } = this;
 
@@ -87,7 +83,7 @@ export default class Root extends BaseComponent {
         annotations={annotations}
         show={show} 
         create={create}
-        reorder={reorder} />
+        move={move} />
     );
 
     return (

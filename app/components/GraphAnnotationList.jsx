@@ -1,37 +1,90 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
-import GraphAnnotationListItem from './GraphAnnotationListItem';
 
 export default class GraphAnnotationList extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_handleSort');
+    this.bindAll('_handleClick', '_handleDragOver', '_handleDragStart', '_handleDragEnd');
+    this._placeholder = document.createElement("li");
+    this._placeholder.className = "placeholder";
   }
 
   render() {
     return (
-      <ul id="oligrapherAnnotationList">
+      <div id="oligrapherAnnotationList">
+        <ul id="oligrapherAnnotationListItems" onDragOver={this._handleDragOver}>
           { this.props.annotations.map((annotation, index) =>
-            <GraphAnnotationListItem 
+            <li
               key={annotation.id}
-              sortData={annotation.id}
-              annotation={annotation} 
-              show={this.props.show} 
-              currentIndex={this.props.currentIndex}
-              index={index} />
+              data-id={index}
+              className={index == this.props.currentIndex ? "active" : null} 
+              draggable={true}
+              onClick={this._handleClick}
+              onDragStart={this._handleDragStart}
+              onDragEnd={this._handleDragEnd}>
+              {annotation.header}
+            </li>              
           ) }
-          <button 
-            id="oligrapherCreateGraphAnnotationButton"
-            className="btn btn-sm btn-default" 
-            onClick={this.props.create}>
-            <span>+</span>
-          </button>
-      </ul>
+        </ul>
+        <button 
+          id="oligrapherCreateGraphAnnotationButton"
+          className="btn btn-sm btn-default" 
+          onClick={this.props.create}>
+          <span className="glyphicon glyphicon-plus"></span>
+        </button>
+        <button 
+          id="oligrapherBumpGraphAnnotationButton"
+          className="btn btn-sm btn-default" 
+          onClick={this.props.bump}>
+          <span className="glyphicon glyphicon-arrow-up"></span>
+        </button>
+      </div>
     );
   }
 
-  _handleSort(data) {
-    console.log(data);
-    this.props.reorder(data);
+  _handleClick(e) {
+    this.props.show(e.target.getAttribute("data-id"));
+  }
+
+  _handleDragStart(e) {
+    this._dragged = e.currentTarget;
+    this._placeholder.innerHTML = e.currentTarget.innerHTML;
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.currentTarget);
+  }
+
+  _handleDragEnd(e) {
+    this._dragged.style.display = "block";
+    this._dragged.parentNode.removeChild(this._placeholder);
+
+    // update store
+    let from = Number(this._dragged.dataset.id);
+    let to = Number(this._over.dataset.id);
+
+    this.props.move(from, to);
+  }
+
+  _handleDragOver(e) {
+    e.preventDefault();
+
+    this._dragged.style.display = "none";
+
+    if (e.target.className == "placeholder") return;
+
+    this._over = e.target;
+
+    let relY = e.clientY - this._over.offsetTop;
+    let height = this._over.offsetHeight / 2;
+    let parent = e.target.parentNode;
+
+    if (relY > height) {
+      this._nodePlacement = "after";
+      parent.insertBefore(this._placeholder, e.target.nextElementSibling);
+    }
+    else if (relY < height) {
+      this._nodePlacement = "before"
+      parent.insertBefore(this._placeholder, e.target);
+    }
   }
 }

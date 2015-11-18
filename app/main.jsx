@@ -29,6 +29,13 @@ export default class OligrapherAnnotations {
   exportAnnotation() {
     return this.root.getWrappedInstance().props.annotation;
   }
+
+  export() {
+    return {
+      graph: this.root.getWrappedInstance().state.graph,
+      annotations: this.root.getWrappedInstance().props.annotations
+    };
+  }
 };
 
 window.OligrapherAnnotations = OligrapherAnnotations;

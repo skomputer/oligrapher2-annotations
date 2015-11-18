@@ -7,7 +7,7 @@ export const SHOW_ANNOTATION = 'SHOW_ANNOTATION';
 export const UPDATE_ANNOTATION = 'UPDATE_ANNOTATION';
 export const DELETE_ANNOTATION = 'DELETE_ANNOTATION';
 export const CREATE_ANNOTATION = 'CREATE_ANNOTATION';
-export const REORDER_ANNOTATIONS = 'REORDER_ANNOTATIONS';
+export const MOVE_ANNOTATION = 'MOVE_ANNOTATION';
 
 /*
  * action creators
@@ -33,6 +33,6 @@ export function createAnnotation() {
   return { type: CREATE_ANNOTATION };
 }
 
-export function reorderAnnotations(ids, indexes) {
-  return { type: REORDER_ANNOTATIONS, ids, indexes };
+export function moveAnnotation(fromIndex, toIndex) {
+  return { type: MOVE_ANNOTATION, fromIndex, toIndex };
 }

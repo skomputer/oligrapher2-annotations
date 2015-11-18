@@ -1,6 +1,6 @@
 import Annotation from '../models/Annotation';
 import { LOAD_ANNOTATIONS, UPDATE_ANNOTATION, DELETE_ANNOTATION, 
-         CREATE_ANNOTATION, REORDER_ANNOTATIONS } from '../actions';
+         CREATE_ANNOTATION, MOVE_ANNOTATION } from '../actions';
 import { assign, keys, cloneDeep } from 'lodash';
 
 export default function annotations(state = [], action) {
@@ -25,12 +25,10 @@ export default function annotations(state = [], action) {
   case CREATE_ANNOTATION:
     return [...state, Annotation.defaults()];
 
-
-  case REORDER_ANNOTATIONS:
-    // console.log(action.ids.map(id => state.find(a => a.id == id)));
-    return action.ids.map(id => state.find(a => a.id == id));
-
-    // return action.indexes.map(index => state[index]);
+  case MOVE_ANNOTATION:
+    let annotations = cloneDeep(state);
+    annotations.splice(action.toIndex, 0, annotations.splice(action.fromIndex, 1)[0]);
+    return annotations;
 
   default:
     return state;
