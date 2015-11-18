@@ -32,18 +32,12 @@ export default class GraphAnnotationList extends BaseComponent {
           onClick={this.props.create}>
           <span className="glyphicon glyphicon-plus"></span>
         </button>
-        <button 
-          id="oligrapherBumpGraphAnnotationButton"
-          className="btn btn-sm btn-default" 
-          onClick={this.props.bump}>
-          <span className="glyphicon glyphicon-arrow-up"></span>
-        </button>
       </div>
     );
   }
 
   _handleClick(e) {
-    this.props.show(e.target.getAttribute("data-id"));
+    this.props.show(parseInt(e.target.dataset.id));
   }
 
   _handleDragStart(e) {
