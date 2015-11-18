@@ -111,6 +111,7 @@ button#oligrapherNavListButton {
   line-height: 34px;
   padding-left: 10px;
   padding-right: 10px;
+  margin-left: -10px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   width: 100%;
@@ -125,11 +126,15 @@ button#oligrapherNavListButton {
 }
 
 #oligrapherAnnotationList button {
-  margin-top: 10px;
-  margin-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 #oligrapherGraphAnnotationEditButton {
+  margin-top: 10px;
+}
+
+#oligrapherGraphAnnotationForm {
   margin-top: 10px;
 }
 

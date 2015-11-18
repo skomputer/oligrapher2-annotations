@@ -119,7 +119,7 @@ export default class Root extends BaseComponent {
     // prepare core oligrapher config
     let element = ReactDOM.findDOMNode(this);
     let graphElement = element.querySelector("#oligrapherGraph");
-    let config = merge({}, this.props.config, { isEditor: false, isLocked: true, root: graphElement });
+    let config = merge({}, this.props.config, { isEditor: false, isLocked: false, root: graphElement });
 
     // pre-apply initial highlights to initial data so that it doesn't start with animated transition
     let startIndex = config.startIndex ? (config.annotations[config.startIndex] ? config.startIndex : 0) : 0;
