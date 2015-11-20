@@ -8,10 +8,7 @@ import BaseComponent from './BaseComponent';
 import ZoomButtons from './ZoomButtons';
 import GraphTitle from './GraphTitle';
 import GraphByLine from './GraphByLine';
-import GraphNavButtons from './GraphNavButtons';
-import GraphAnnotationList from './GraphAnnotationList';
-import GraphAnnotation from './GraphAnnotation';
-import GraphAnnotationForm from './GraphAnnotationForm';
+import GraphAnnotations from './GraphAnnotations';
 import Graph from '../models/Graph';
 import { merge, cloneDeep, isNumber, keys } from 'lodash';
 
@@ -19,11 +16,11 @@ export default class Root extends BaseComponent {
   constructor(props) {
     super(props);
     let graph = props.config.data ? props.config.data : {};
-    this.state = { graph: graph, isEditor: false, editForm: false, navList: false };
-  } 
+    this.state = { graph: graph, isEditor: false, editForm: false, navList: false, showAnnotations: true };
+  }
 
   render() {
-    let { graph, user, date, editForm, isEditor, navList } = this.state;
+    let { graph, user, date, editForm, isEditor, navList, showAnnotations } = this.state;
     let { dispatch, annotation, annotations, currentIndex } = this.props;
     let prevId = this._prevId();
     let nextId = this._nextId();
@@ -37,6 +34,7 @@ export default class Root extends BaseComponent {
     let show = (id) => this._show(id);
     let create = () => dispatch(createAnnotation());
     let move = (from, to) => dispatch(moveAnnotation(from, to));
+    let swapAnnotations = () => this._swapAnnotations();
 
     let { zoomIn, zoomOut } = this;
 
@@ -52,59 +50,41 @@ export default class Root extends BaseComponent {
       'right': () => this._show(nextId)
     };
 
-    let navComponent = (
-      <GraphNavButtons 
-        prevClick={prevClick} 
-        nextClick={nextClick} 
-        isEditor={isEditor}
-        swapList={swapList} />
-    );
-
-    let formComponent = (
-      <GraphAnnotationForm 
-        annotation={annotation} 
-        index={currentIndex} 
-        update={update} 
-        remove={remove}
-        swapEditForm={swapEditForm} />
-    );
-
-    let annotationComponent = (
-      <GraphAnnotation 
-        annotation={annotation} 
-        index={currentIndex} 
-        isEditor={isEditor}
-        swapEditForm={swapEditForm} />
-    );
-
-    let navListComponent = (
-      <GraphAnnotationList
-        currentIndex={currentIndex}
-        annotations={annotations}
-        show={show} 
-        create={create}
-        move={move} />
-    );
-
     return (
       <div id="oligrapherAnnotationsContainer" className="container-fluid" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>          
           <div className="row">
-            <div className="col-md-8">
+            <div className={showAnnotations ? "col-md-8" : "col-md-12"}>
               <div id="oligrapherHeader">
+                { !showAnnotations ? 
+                  <div id="oligrapherShowAnnotations">
+                    <button onClick={() => this._swapAnnotations()} className="btn btn-lg btn-default">Show</button>
+                  </div> : null }
                 <GraphTitle graph={graph} />
                 { user || date ? <GraphByLine user={user} date={date} /> : null }
               </div>
               <div id="oligrapherGraphContainer">
                 <div id="oligrapherGraph"></div>
-                <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
               </div>
             </div>
-            <div className="col-md-4">
-              { annotation ? navComponent : null }
-              { annotation && navList ? navListComponent : null }
-              { annotation ? (editForm ? formComponent : annotationComponent) : null }
-            </div>
+            { showAnnotations ?
+              <GraphAnnotations 
+                isEditor={isEditor}
+                navList={navList}
+                prevClick={prevClick}
+                nextClick={nextClick}
+                swapList={swapList}
+                swapAnnotations={swapAnnotations}
+                annotation={annotation}
+                annotations={annotations}
+                currentIndex={currentIndex}
+                show={show}
+                create={create}
+                update={update}
+                move={move}
+                remove={remove}
+                editForm={editForm}
+                swapEditForm={swapEditForm} /> : null }
           </div>
         </HotKeys>
       </div>
@@ -119,7 +99,7 @@ export default class Root extends BaseComponent {
     // prepare core oligrapher config
     let element = ReactDOM.findDOMNode(this);
     let graphElement = element.querySelector("#oligrapherGraph");
-    let config = merge({}, this.props.config, { isEditor: false, isLocked: false, root: graphElement });
+    let config = merge({ isEditor: false, isLocked: false, domRoot: graphElement }, this.props.config);
 
     // pre-apply initial highlights to initial data so that it doesn't start with animated transition
     let startIndex = config.startIndex ? (config.annotations[config.startIndex] ? config.startIndex : 0) : 0;
@@ -130,8 +110,8 @@ export default class Root extends BaseComponent {
       this.setState({ graph });
 
       // oli might not be fully initialized yet
-      if (this.oli) {
-        let highlights = this.oli.getHighlights();
+      if (this.editor) {
+        let highlights = this.editor.oligrapher.getHighlights();
         let updateData = { 
           nodeIds: keys(highlights.nodes), 
           edgeIds: keys(highlights.edges), 
@@ -141,11 +121,11 @@ export default class Root extends BaseComponent {
       }
     }
 
-    this.oli = new config.oligrapher(config);
-    this.setState({ graph: this.oli.export(), user: config.user, date: config.date, isEditor: isEditor });
+    this.editor = new config.editor(config);
+    this.setState({ graph: this.editor.oligrapher.export(), user: config.user, date: config.date, isEditor: isEditor });
 
-    this.zoomIn = () => this.oli.zoomIn();
-    this.zoomOut = () => this.oli.zoomOut();
+    this.zoomIn = () => this.editor.oligrapher.zoomIn();
+    this.zoomOut = () => this.editor.oligrapher.zoomOut();
 
     if (config.startIndex) {
       this.props.dispatch(showAnnotation(config.startIndex));
@@ -161,7 +141,7 @@ export default class Root extends BaseComponent {
 
     if (this.props.annotation) {
       let faded = true;
-      this.oli.setHighlights(this.props.annotation, faded);
+      this.editor.oligrapher.setHighlights(this.props.annotation, faded);
     }
   }
 
@@ -194,10 +174,30 @@ export default class Root extends BaseComponent {
     }
   }
 
+  _swapAnnotations() {
+    this.setState({ showAnnotations: !this.state.showAnnotations });
+  }
+
   _show(id) {
     if (isNumber(id) && id !== this.props.currentIndex) {
       this.props.dispatch(showAnnotation(id));
     }
+  }
+
+  graphWithoutHighlights() {
+    let graph2 = cloneDeep(this.state.graph);
+    values(graph2.nodes).forEach(node => { graph2.nodes[node.id].display.status = "normal" });
+    values(graph2.edges).forEach(edge => { graph2.edges[edge.id].display.status = "normal" });
+    values(graph2.captions).forEach(caption => { graph2.captions[caption.id].display.status = "normal" });
+    return graph2;
+  }
+
+  toggleEditor(value) {
+    this.editor.oligrapher.toggleEditor(value);
+  }
+
+  toggleLocked(value) {
+    this.editor.oligrapher.toggleLocked(value);
   }
 }
 

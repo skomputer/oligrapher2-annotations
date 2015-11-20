@@ -19,11 +19,10 @@ export default class OligrapherAnnotations {
       this.rootElement
     );
 
-    return this;
-  }
+    this.editor = this.root.getWrappedInstance().editor;
+    this.oligrapher = this.root.getWrappedInstance().editor.oligrapher;
 
-  oligrapher() {
-    return this.root.getWrappedInstance().oli;
+    return this;
   }
 
   exportAnnotation() {
@@ -32,9 +31,13 @@ export default class OligrapherAnnotations {
 
   export() {
     return {
-      graph: this.root.getWrappedInstance().state.graph,
+      graph: this.root.getWrappedInstance().graphWithoutHighlights(),
       annotations: this.root.getWrappedInstance().props.annotations
     };
+  }
+
+  toggleEditor(value) {
+    this.editor.toggleEditor(value);
   }
 };
 

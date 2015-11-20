@@ -18,6 +18,10 @@ export default class GraphNavButtons extends Component {
             id="oligrapherNavListButton"
             className="btn btn-lg btn-default"
             onClick={this.props.swapList}>List</button> : null }
+        <button
+          id="oligrapherHideAnnotationsButton"
+          className="btn btn-lg btn-default"
+          onClick={this.props.swapAnnotations}>Hide</button>
       </div>
     );
   }
