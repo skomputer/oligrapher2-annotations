@@ -37,7 +37,7 @@ export default class OligrapherAnnotations {
   }
 
   toggleEditor(value) {
-    this.editor.toggleEditor(value);
+    this.root.getWrappedInstance().toggleEditor(value);
   }
 };
 

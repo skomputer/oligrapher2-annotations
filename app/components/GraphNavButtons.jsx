@@ -17,11 +17,13 @@ export default class GraphNavButtons extends Component {
           <button
             id="oligrapherNavListButton"
             className="btn btn-lg btn-default"
-            onClick={this.props.swapList}>List</button> : null }
+            onClick={this.props.swapList}>
+            <span className="glyphicon glyphicon-list"></span></button> : null }
         <button
           id="oligrapherHideAnnotationsButton"
           className="btn btn-lg btn-default"
-          onClick={this.props.swapAnnotations}>Hide</button>
+          onClick={this.props.swapAnnotations}>
+          <span className="glyphicon glyphicon-font"></span></button>
       </div>
     );
   }

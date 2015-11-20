@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import GraphNavButtons from './GraphNavButtons';
 import GraphAnnotationList from './GraphAnnotationList';
 import GraphAnnotation from './GraphAnnotation';
@@ -49,7 +48,7 @@ export default class GraphAnnotations extends Component {
     );
 
     return (
-      <div id="oligrapherAnotations" className="col-md-4">
+      <div className="col-md-4">
         { annotation ? navComponent : null }
         { annotation && navList ? navListComponent : null }
         { annotation ? (editForm ? formComponent : annotationComponent) : null }

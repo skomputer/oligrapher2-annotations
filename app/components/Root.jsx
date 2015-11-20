@@ -58,7 +58,9 @@ export default class Root extends BaseComponent {
               <div id="oligrapherHeader">
                 { !showAnnotations ? 
                   <div id="oligrapherShowAnnotations">
-                    <button onClick={() => this._swapAnnotations()} className="btn btn-lg btn-default">Show</button>
+                    <button onClick={() => this._swapAnnotations()} className="btn btn-lg btn-default">
+                      <span className="glyphicon glyphicon-font"></span>
+                    </button>
                   </div> : null }
                 <GraphTitle graph={graph} />
                 { user || date ? <GraphByLine user={user} date={date} /> : null }
@@ -193,7 +195,8 @@ export default class Root extends BaseComponent {
   }
 
   toggleEditor(value) {
-    this.editor.oligrapher.toggleEditor(value);
+    this.setState({ isEditor: value });
+    this.editor.toggleEditor(value);
   }
 
   toggleLocked(value) {
