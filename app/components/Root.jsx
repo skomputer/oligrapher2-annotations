@@ -5,17 +5,17 @@ import { loadAnnotations, showAnnotation, updateAnnotation,
          deleteAnnotation, createAnnotation, moveAnnotation } from '../actions';
 import { HotKeys } from 'react-hotkeys';
 import BaseComponent from './BaseComponent';
-import ZoomButtons from './ZoomButtons';
+import SaveButton from './SaveButton';
 import GraphTitle from './GraphTitle';
 import GraphByLine from './GraphByLine';
 import GraphAnnotations from './GraphAnnotations';
 import Graph from '../models/Graph';
-import { merge, cloneDeep, isNumber, keys } from 'lodash';
+import { merge, cloneDeep, isNumber, keys, pick } from 'lodash';
 
 export default class Root extends BaseComponent {
   constructor(props) {
     super(props);
-    let graph = props.config.data ? props.config.data : {};
+    let graph = props.data ? props.data : {};
     this.state = { graph: graph, isEditor: false, editForm: false, navList: false, showAnnotations: true };
   }
 
@@ -35,8 +35,6 @@ export default class Root extends BaseComponent {
     let create = () => dispatch(createAnnotation());
     let move = (from, to) => dispatch(moveAnnotation(from, to));
     let swapAnnotations = () => this._swapAnnotations();
-
-    let { zoomIn, zoomOut } = this;
 
     let keyMap = {
       'altE': 'alt+e',
@@ -67,6 +65,7 @@ export default class Root extends BaseComponent {
               </div>
               <div id="oligrapherGraphContainer">
                 <div id="oligrapherGraph"></div>
+                { this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
               </div>
             </div>
             { showAnnotations ?
@@ -95,18 +94,22 @@ export default class Root extends BaseComponent {
 
   componentDidMount() {
     this._updateGraphHeight()
-
-    let isEditor = this.props.config.isEditor;
+    let isEditor = this.props.isEditor;
 
     // prepare core oligrapher config
     let element = ReactDOM.findDOMNode(this);
     let graphElement = element.querySelector("#oligrapherGraph");
-    let config = merge({ isEditor: false, isLocked: false, domRoot: graphElement }, this.props.config);
+    let config = merge(
+      { isEditor: false, isLocked: false, domRoot: graphElement, data: this.props.graphData }, 
+      pick(this.props, ['oligrapher', 'dataSource', 'isEditor', 'isLocked'])
+    );
 
     // pre-apply initial highlights to initial data so that it doesn't start with animated transition
-    let startIndex = config.startIndex ? (config.annotations[config.startIndex] ? config.startIndex : 0) : 0;
-    let highlightedData = Graph.setHighlights(config.data, config.annotations[config.startIndex], true);
-    config = merge({}, config, { data: highlightedData });
+    if (this.props.annotationsData && this.props.annotationsData.length > 0) {
+      let startIndex = this.props.startIndex ? (this.props.annotationsData[this.props.startIndex] ? this.props.startIndex : 0) : 0;
+      let highlightedData = Graph.setHighlights(this.props.graphData, this.props.annotationsData[this.props.startIndex], true);
+      config = merge({}, config, { data: highlightedData });
+    }
 
     config.onUpdate = (graph) => {      
       this.setState({ graph });
@@ -123,18 +126,15 @@ export default class Root extends BaseComponent {
       }
     }
 
-    this.editor = new config.editor(config);
-    this.setState({ graph: this.editor.oligrapher.export(), user: config.user, date: config.date, isEditor: isEditor });
+    this.editor = new this.props.editor(config);
+    this.setState({ graph: this.editor.oligrapher.export(), user: this.props.user, date: this.props.date, isEditor: this.props.isEditor });
 
-    this.zoomIn = () => this.editor.oligrapher.zoomIn();
-    this.zoomOut = () => this.editor.oligrapher.zoomOut();
-
-    if (config.startIndex) {
-      this.props.dispatch(showAnnotation(config.startIndex));
+    if (this.props.startIndex) {
+      this.props.dispatch(showAnnotation(this.props.startIndex));
     }
 
-    if (config.annotations) {
-      this.props.dispatch(loadAnnotations(config.annotations));
+    if (this.props.annotations) {
+      this.props.dispatch(loadAnnotations(this.props.annotationsData));
     }
   }
 
@@ -201,6 +201,15 @@ export default class Root extends BaseComponent {
 
   toggleLocked(value) {
     this.editor.oligrapher.toggleLocked(value);
+  }
+
+  _handleSave() {
+    if (this.props.onSave) {
+      this.props.onSave({
+        graph: this.state.graph,
+        annotations: this.props.annotations
+      });
+    }
   }
 }
 

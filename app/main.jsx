@@ -7,14 +7,12 @@ import reducers from './reducers';
 
 export default class OligrapherAnnotations {
   constructor(config) {
-    this.rootElement = config.root;
+    this.rootElement = config.domRoot;
     this.store = createStore(reducers);
 
     this.providerInstance = ReactDOM.render(
       <Provider store={this.store}>
-        <Root 
-          config={config}
-          ref={c => this.root = c} />
+        <Root {...config} ref={c => this.root = c} />
       </Provider>,
       this.rootElement
     );

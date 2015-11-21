@@ -2,6 +2,8 @@ import { merge, values, cloneDeep, includes } from 'lodash';
 
 export default class Graph {
   static setHighlights(graph, highlights, otherwiseFaded = false) {
+    if (!highlights) return graph;
+
     if (highlights.nodeIds.length + highlights.edgeIds.length + highlights.captionIds.length == 0) {
       otherwiseFaded = false;
     }

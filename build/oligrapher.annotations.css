@@ -3,14 +3,6 @@
   margin-top: 10px;
 }
 
-#oligrapherToggleGraphEditor {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  border: 1px solid #eee;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
 #oligrapherTitle {
   font-size: 50px;
   font-weight: 300;
@@ -20,6 +12,16 @@
 
 #oligrapherDate {
   color: #888;
+}
+
+#oligrapherSaveButton {
+  position: absolute;
+  top: 128px;
+  left: 15px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 32px;
+  padding-top: 7px;
 }
 
 #oligrapherShowAnnotations {

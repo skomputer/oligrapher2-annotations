@@ -26,16 +26,17 @@
       root.style.height = window.innerHeight - 10 + "px";
 
       var oliAnnotations = new OligrapherAnnotations({
-        root: root,
+        domRoot: root,
         oligrapher: Oligrapher,
-        data: graph, 
-        annotations: annotations,
+        graphData: graph, 
+        annotationsData: annotations,
         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         date: "August 30, 2015",
         startIndex: 0,
         isEditor: true,
         editor: OligrapherEditor,
-        dataSource: LsDataSource
+        dataSource: LsDataSource,
+        onSave: function(data) { console.log(data); }
       });
     </script>
   </body>

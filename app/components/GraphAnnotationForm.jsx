@@ -60,7 +60,6 @@ export default class GraphAnnotationForm extends BaseComponent {
   }
 
   _handleChange(event, field) {
-    console.log(field, event.target.value);
     this.setState({ [field]: event.target.value });
     this._apply();
   }
