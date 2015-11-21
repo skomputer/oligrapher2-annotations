@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
-export default class GraphByLine extends Component {
+export default class GraphLinks extends Component {
 
   render() {
-    let { user, date } = this.props;
+    let { links } = this.props;
 
     return (
-      <div id="oligrapherByLine" style={{ display: "inline-block" }}>
-        { user ? this._renderUser(user) : null }
-        { date ? <span id="oligrapherDate">{date}</span> : null }
+      <div id="oligrapherGraphLinks" style={{ display: "inline-block" }}>
+        { links.map((link, i) =>
+          <a key={i} id={link.id} href={link.url} target={link.target || "_blank"}>{link.text}</a>
+        ) }
       </div>
     );
   }

@@ -8,6 +8,7 @@ import BaseComponent from './BaseComponent';
 import SaveButton from './SaveButton';
 import GraphTitle from './GraphTitle';
 import GraphByLine from './GraphByLine';
+import GraphLinks from './GraphLinks';
 import GraphAnnotations from './GraphAnnotations';
 import Graph from '../models/Graph';
 import { merge, cloneDeep, isNumber, keys, pick } from 'lodash';
@@ -20,8 +21,8 @@ export default class Root extends BaseComponent {
   }
 
   render() {
-    let { graph, user, date, editForm, isEditor, navList, showAnnotations } = this.state;
-    let { dispatch, annotation, annotations, currentIndex } = this.props;
+    let { graph, editForm, isEditor, navList, showAnnotations } = this.state;
+    let { dispatch, annotation, annotations, currentIndex, user, date, links } = this.props;
     let prevId = this._prevId();
     let nextId = this._nextId();
 
@@ -62,10 +63,11 @@ export default class Root extends BaseComponent {
                   </div> : null }
                 <GraphTitle graph={graph} />
                 { user || date ? <GraphByLine user={user} date={date} /> : null }
+                { links ? <GraphLinks links={links} /> : null}
               </div>
               <div id="oligrapherGraphContainer">
                 <div id="oligrapherGraph"></div>
-                { this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
+                { isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
               </div>
             </div>
             { showAnnotations ?
@@ -114,7 +116,7 @@ export default class Root extends BaseComponent {
     config.onUpdate = (graph) => {      
       this.setState({ graph });
 
-      // oli might not be fully initialized yet
+      // editor might not be fully initialized yet
       if (this.editor) {
         let highlights = this.editor.oligrapher.getHighlights();
         let updateData = { 
@@ -127,7 +129,7 @@ export default class Root extends BaseComponent {
     }
 
     this.editor = new this.props.editor(config);
-    this.setState({ graph: this.editor.oligrapher.export(), user: this.props.user, date: this.props.date, isEditor: this.props.isEditor });
+    this.setState({ graph: this.editor.oligrapher.export(), isEditor: this.props.isEditor });
 
     if (this.props.startIndex) {
       this.props.dispatch(showAnnotation(this.props.startIndex));

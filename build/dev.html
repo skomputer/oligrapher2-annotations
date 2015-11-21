@@ -32,13 +32,18 @@
         oligrapher: Oligrapher,
         graphData: graph, 
         annotationsData: annotations,
-        user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
-        date: "August 30, 2015",
+        // user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        // date: "August 30, 2015",
         startIndex: 0,
         isEditor: true,
         editor: OligrapherEditor,
         dataSource: LsDataSource,
-        onSave: function(data) { console.log(data); }
+        onSave: function(data) { console.log(data); },
+        links: [
+          { text: "some", url: "http://some.net" },
+          { id: "exampleLink", text: "example", url: "http://example.com" },
+          { text: "links", url: "http://links.org" }
+        ]
       });
     </script>
   </body>

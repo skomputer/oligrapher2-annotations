@@ -10,8 +10,22 @@
   margin-bottom: 5px;
 }
 
+#oligrapherByLine {
+  margin-right: 18px;
+}
+
 #oligrapherDate {
   color: #888;
+}
+
+#oligrapherGraphLinks {
+  margin-left: 2px;
+}
+
+#oligrapherGraphLinks a {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 12px;
 }
 
 #oligrapherSaveButton {

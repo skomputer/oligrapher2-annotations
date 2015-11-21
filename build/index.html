@@ -36,7 +36,12 @@
         isEditor: true,
         editor: OligrapherEditor,
         dataSource: LsDataSource,
-        onSave: function(data) { console.log(data); }
+        onSave: function(data) { console.log(data); },
+        links: [
+          { text: "some", url: "http://some.net" },
+          { id: "exampleLink", text: "example", url: "http://example.com" },
+          { text: "links", url: "http://links.org" }
+        ]
       });
     </script>
   </body>
