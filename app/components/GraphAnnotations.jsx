@@ -49,7 +49,7 @@ export default class GraphAnnotations extends Component {
 
     return (
       <div className="col-md-4">
-        { navComponent }
+        { annotation || isEditor ? navComponent : null }
         { navList ? navListComponent : null }
         { annotation ? (editForm ? formComponent : annotationComponent) : null }
       </div>

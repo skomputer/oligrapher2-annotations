@@ -7,10 +7,22 @@ export default class GraphLinks extends Component {
 
     return (
       <div id="oligrapherGraphLinks" style={{ display: "inline-block" }}>
-        { links.map((link, i) =>
-          <a key={i} id={link.id} href={link.url} target={link.target || "_blank"}>{link.text}</a>
-        ) }
+        { links.map((link, i) => {
+          return (link.method == "POST" ? this._postLink(link, i) : this._getLink(link, i));
+        }) }
       </div>
+    );
+  }
+
+  _getLink(link, i) {
+    return <a key={i} id={link.id} href={link.url} target={link.target || "_blank"}>{link.text}</a>;
+  }
+
+  _postLink(link, i) {
+    return (
+      <form key={i} action={link.url} method="POST">
+        <a id={link.id} onClick={e => e.target.parentElement.submit()}>{link.text}</a>
+      </form>
     );
   }
 

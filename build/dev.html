@@ -35,14 +35,14 @@
         // user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         // date: "August 30, 2015",
         startIndex: 0,
-        isEditor: true,
+        isEditor: false,
         editor: OligrapherEditor,
         dataSource: LsDataSource,
         onSave: function(data) { console.log(data); },
         links: [
           { text: "some", url: "http://some.net" },
           { id: "exampleLink", text: "example", url: "http://example.com" },
-          { text: "links", url: "http://links.org" }
+          { method: "POST", text: "links", url: "http://links.com" }
         ]
       });
     </script>

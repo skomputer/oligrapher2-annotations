@@ -49,13 +49,15 @@ export default class Root extends BaseComponent {
       'right': () => this._show(nextId)
     };
 
+    let areAnnotations = (isEditor || annotations.length > 0);
+
     return (
       <div id="oligrapherAnnotationsContainer" className="container-fluid" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>          
           <div className="row">
-            <div className={showAnnotations ? "col-md-8" : "col-md-12"}>
+            <div className={showAnnotations && areAnnotations ? "col-md-8" : "col-md-12"}>
               <div id="oligrapherHeader">
-                { !showAnnotations ? 
+                { !showAnnotations && areAnnotations ? 
                   <div id="oligrapherShowAnnotations">
                     <button onClick={() => this._swapAnnotations()} className="btn btn-lg btn-default">
                       <span className="glyphicon glyphicon-font"></span>
@@ -70,7 +72,7 @@ export default class Root extends BaseComponent {
                 { isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
               </div>
             </div>
-            { showAnnotations ?
+            { showAnnotations && areAnnotations ?
               <GraphAnnotations 
                 isEditor={isEditor}
                 navList={navList}
