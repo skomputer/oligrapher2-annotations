@@ -27,9 +27,6 @@ export default class GraphAnnotationForm extends BaseComponent {
           value={this.props.annotation.text}
           onChange={this._handleTextChange}></textarea>
         <button 
-          className="btn btn-default btn-sm" 
-          onClick={this._handleClose}>Done</button>&nbsp;&nbsp;
-        <button 
           className="btn btn-danger btn-sm" 
           onClick={this._handleRemove}>Remove</button>
       </div>

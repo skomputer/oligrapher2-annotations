@@ -1,6 +1,9 @@
 #oligrapherGraphContainer {
   position: relative;
-  margin-top: 10px;
+}
+
+#oligrapherHeader {
+  margin-bottom: 10px;  
 }
 
 #oligrapherTitle {
@@ -31,6 +34,17 @@
 
 #oligrapherGraphLinks form {
   display: inline-block;
+}
+
+#oligrapherEditButton {
+  position: absolute;
+  top: 85px;
+  left: 15px;
+  border: 1px solid #ccc;
+  background-color: #fff;  
+  padding-top: 7px;
+  width: 32px;
+  outline: none;
 }
 
 #oligrapherSaveButton {
@@ -136,7 +150,7 @@
 }
 
 #oligrapherAnnotationList button {
-  margin-top: 5px;
+  margin-top: 0px;
   margin-bottom: 5px;
 }
 

@@ -21,6 +21,7 @@ export default class GraphLinks extends Component {
   _postLink(link, i) {
     return (
       <form key={i} action={link.url} method="POST">
+        <input type="hidden" name="foo" value="bar" />
         <a id={link.id} onClick={e => e.target.parentElement.submit()}>{link.text}</a>
       </form>
     );

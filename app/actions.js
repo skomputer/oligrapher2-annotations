@@ -29,8 +29,8 @@ export function deleteAnnotation(id) {
   return { type: DELETE_ANNOTATION, id };
 }
 
-export function createAnnotation() {
-  return { type: CREATE_ANNOTATION };
+export function createAnnotation(newIndex) {
+  return { type: CREATE_ANNOTATION, newIndex };
 }
 
 export function moveAnnotation(fromIndex, toIndex) {

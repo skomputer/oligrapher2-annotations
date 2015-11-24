@@ -42,6 +42,7 @@ export default class GraphAnnotations extends Component {
       <GraphAnnotationList
         currentIndex={currentIndex}
         annotations={annotations}
+        isEditor={isEditor}
         show={show} 
         create={create}
         move={move} />
@@ -50,8 +51,8 @@ export default class GraphAnnotations extends Component {
     return (
       <div className="col-md-4">
         { annotation || isEditor ? navComponent : null }
-        { navList ? navListComponent : null }
-        { annotation ? (editForm ? formComponent : annotationComponent) : null }
+        { isEditor && navList ? navListComponent : null }
+        { annotation ? (isEditor ? formComponent : annotationComponent) : null }
       </div>
     );
   }

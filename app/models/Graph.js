@@ -31,4 +31,22 @@ export default class Graph {
 
     return newGraph;
   };
+
+  static clearHighlights(graph) {
+    let newGraph = cloneDeep(graph);
+
+    values(newGraph.nodes).forEach(node => {
+      delete newGraph.nodes[node.id].display.status;
+    });
+
+    values(newGraph.edges).forEach(edge => {
+      delete newGraph.edges[edge.id].display.status;
+    });
+
+    values(newGraph.captions).forEach(caption => {
+      delete newGraph.captions[caption.id].display.status;
+    });    
+
+    return newGraph;
+  }
 }

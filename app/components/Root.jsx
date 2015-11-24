@@ -6,9 +6,8 @@ import { loadAnnotations, showAnnotation, updateAnnotation,
 import { HotKeys } from 'react-hotkeys';
 import BaseComponent from './BaseComponent';
 import SaveButton from './SaveButton';
-import GraphTitle from './GraphTitle';
-import GraphByLine from './GraphByLine';
-import GraphLinks from './GraphLinks';
+import EditButton from './EditButton';
+import GraphHeader from './GraphHeader';
 import GraphAnnotations from './GraphAnnotations';
 import Graph from '../models/Graph';
 import { merge, cloneDeep, isNumber, keys, pick } from 'lodash';
@@ -16,8 +15,15 @@ import { merge, cloneDeep, isNumber, keys, pick } from 'lodash';
 export default class Root extends BaseComponent {
   constructor(props) {
     super(props);
-    let graph = props.data ? props.data : {};
-    this.state = { graph: graph, isEditor: false, editForm: false, navList: false, showAnnotations: true };
+    let graph = props.graphData ? props.graphData : {};
+    this.state = { 
+      graph: graph, 
+      isEditor: false, 
+      editForm: false, 
+      navList: false, 
+      showAnnotations: true, 
+      showEditTools: false
+    };
   }
 
   render() {
@@ -33,7 +39,7 @@ export default class Root extends BaseComponent {
     let swapEditForm = () => this._swapEditForm();
     let swapList = () => this._swapNavList();
     let show = (id) => this._show(id);
-    let create = () => dispatch(createAnnotation());
+    let create = () => dispatch(createAnnotation(this.props.annotations.length));
     let move = (from, to) => dispatch(moveAnnotation(from, to));
     let swapAnnotations = () => this._swapAnnotations();
 
@@ -49,30 +55,29 @@ export default class Root extends BaseComponent {
       'right': () => this._show(nextId)
     };
 
-    let areAnnotations = (isEditor || annotations.length > 0);
+    let hasAnnotations = (isEditor || annotations.length > 0);
 
     return (
       <div id="oligrapherAnnotationsContainer" className="container-fluid" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>          
           <div className="row">
-            <div className={showAnnotations && areAnnotations ? "col-md-8" : "col-md-12"}>
-              <div id="oligrapherHeader">
-                { !showAnnotations && areAnnotations ? 
-                  <div id="oligrapherShowAnnotations">
-                    <button onClick={() => this._swapAnnotations()} className="btn btn-lg btn-default">
-                      <span className="glyphicon glyphicon-font"></span>
-                    </button>
-                  </div> : null }
-                <GraphTitle graph={graph} />
-                { user || date ? <GraphByLine user={user} date={date} /> : null }
-                { links ? <GraphLinks links={links} /> : null}
-              </div>
+            <div className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
+              { graph.title ? 
+                <GraphHeader 
+                  showAnnotations={showAnnotations}
+                  hasAnnotations={hasAnnotations} 
+                  swapAnnotations={swapAnnotations}
+                  graph={graph}
+                  user={user}
+                  date={date}
+                  links={links} /> : null }
               <div id="oligrapherGraphContainer">
                 <div id="oligrapherGraph"></div>
+                { isEditor ? <EditButton toggle={() => this._toggleEditTools()} /> : null }
                 { isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
               </div>
             </div>
-            { showAnnotations && areAnnotations ?
+            { showAnnotations && hasAnnotations ?
               <GraphAnnotations 
                 isEditor={isEditor}
                 navList={navList}
@@ -99,27 +104,35 @@ export default class Root extends BaseComponent {
   componentDidMount() {
     this._updateGraphHeight()
     let isEditor = this.props.isEditor;
+    let navList = true
+
+    let hasAnnotations = this.props.annotationsData && this.props.annotationsData.length > 0;
+    let startIndex = this.props.startIndex ? (this.props.annotationsData[this.props.startIndex] ? this.props.startIndex : 0) : 0;
 
     // prepare core oligrapher config
     let element = ReactDOM.findDOMNode(this);
     let graphElement = element.querySelector("#oligrapherGraph");
-    let config = merge(
-      { isEditor: false, isLocked: false, domRoot: graphElement, data: this.props.graphData }, 
-      pick(this.props, ['oligrapher', 'dataSource', 'isEditor', 'isLocked'])
-    );
+    let config = merge({ 
+      isEditor: false, 
+      isLocked: !isEditor || !hasAnnotations, 
+      domRoot: graphElement, 
+      data: this.props.graphData, 
+      viewOnlyHighlighted: !isEditor,
+      showEditButton: false
+    }, pick(this.props, ['oligrapher', 'dataSource', 'isEditor', 'isLocked']));
 
     // pre-apply initial highlights to initial data so that it doesn't start with animated transition
-    if (this.props.annotationsData && this.props.annotationsData.length > 0) {
-      let startIndex = this.props.startIndex ? (this.props.annotationsData[this.props.startIndex] ? this.props.startIndex : 0) : 0;
-      let highlightedData = Graph.setHighlights(this.props.graphData, this.props.annotationsData[this.props.startIndex], true);
-      config = merge({}, config, { data: highlightedData });
+    if (hasAnnotations) {
+      let highlightedData = Graph.setHighlights(this.props.graphData, this.props.annotationsData[startIndex], true);
+      config = merge(config, { data: highlightedData });
     }
 
     config.onUpdate = (graph) => {      
       this.setState({ graph });
 
       // editor might not be fully initialized yet
-      if (this.editor) {
+      // make sure there's an annotation to update
+      if (this.editor && this.props.annotation) {
         let highlights = this.editor.oligrapher.getHighlights();
         let updateData = { 
           nodeIds: keys(highlights.nodes), 
@@ -131,14 +144,14 @@ export default class Root extends BaseComponent {
     }
 
     this.editor = new this.props.editor(config);
-    this.setState({ graph: this.editor.oligrapher.export(), isEditor: this.props.isEditor });
+    this.setState({ graph: this.editor.oligrapher.export(), isEditor: this.props.isEditor, navList: navList });
 
-    if (this.props.startIndex) {
-      this.props.dispatch(showAnnotation(this.props.startIndex));
-    }
-
-    if (this.props.annotations) {
+    if (hasAnnotations) {
       this.props.dispatch(loadAnnotations(this.props.annotationsData));
+
+      if (startIndex) {
+        this.props.dispatch(showAnnotation(startIndex));
+      }
     }
   }
 
@@ -146,16 +159,24 @@ export default class Root extends BaseComponent {
     this._updateGraphHeight();
 
     if (this.props.annotation) {
-      let faded = true;
+      let faded = !this.props.isEditor;
       this.editor.oligrapher.setHighlights(this.props.annotation, faded);
+    } else if (prevProps.annotation) {
+      // last annotation deleted, so clear highlights
+      this.editor.oligrapher.clearHighlights();
     }
+
+    this._lockOrUnlockEditor(this.state.showEditTools, this.props.annotation);
   }
 
   _updateGraphHeight() {
     let element = ReactDOM.findDOMNode(this);
     let headerElement = element.querySelector("#oligrapherHeader")
     let graphElement = element.querySelector("#oligrapherGraph");
-    graphElement.style.height = (element.offsetHeight - headerElement.offsetHeight) + "px";
+    let height = headerElement ? (element.offsetHeight - headerElement.offsetHeight) : element.offsetHeight;
+    console.log(height);
+    // console.log(height, headerElement.offsetHeight)
+    graphElement.style.height = height + "px";
   }
 
   _prevId() {
@@ -210,10 +231,23 @@ export default class Root extends BaseComponent {
   _handleSave() {
     if (this.props.onSave) {
       this.props.onSave({
-        graph: this.state.graph,
+        graph: Graph.clearHighlights(this.state.graph),
         annotations: this.props.annotations
       });
     }
+  }
+
+  _toggleEditTools(value) {
+    value = (typeof value !== "undefined") ? value : !this.state.showEditTools;
+    this.editor.toggleEditTools(value);
+    this.setState({ showEditTools: value });
+
+    // lock editor if edit tools hidden and no annotations
+    this._lockOrUnlockEditor(value, this.props.annotation);
+  }
+
+  _lockOrUnlockEditor(showEditTools, hasAnnotations) {
+    this.editor.toggleLocked(!showEditTools && !hasAnnotations);    
   }
 }
 

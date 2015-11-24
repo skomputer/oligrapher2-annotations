@@ -22,16 +22,17 @@ export default class GraphAnnotationList extends BaseComponent {
               onClick={this._handleClick}
               onDragStart={this._handleDragStart}
               onDragEnd={this._handleDragEnd}>
-              {annotation.header}
+              {annotation.header.trim().length > 0 ? annotation.header : "Untitled Annotation"}
             </li>              
           ) }
         </ul>
-        <button 
-          id="oligrapherCreateGraphAnnotationButton"
-          className="btn btn-sm btn-default" 
-          onClick={this.props.create}>
-          <span className="glyphicon glyphicon-plus"></span>
-        </button>
+        { this.props.isEditor ? 
+          <button 
+            id="oligrapherCreateGraphAnnotationButton"
+            className="btn btn-sm btn-default" 
+            onClick={this.props.create}>
+            New Annotation
+          </button> : null }
       </div>
     );
   }
