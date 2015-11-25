@@ -30,14 +30,19 @@
       var oliAnnotations = new OligrapherAnnotations({
         domRoot: root,
         oligrapher: Oligrapher,
+        title: data.map.title,
         graphData: graph, 
         annotationsData: annotations,
         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         date: "August 30, 2015",
         startIndex: 0,
-        isEditor: false,
+        isEditor: true,
         editor: OligrapherEditor,
         dataSource: LsDataSource,
+        settings: {
+          is_private: true,
+          is_featured: false
+        },
         onSave: function(data) { console.log(data); },
         links: [
           { text: "some", url: "http://some.net" },

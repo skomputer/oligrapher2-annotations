@@ -8,6 +8,8 @@ export const UPDATE_ANNOTATION = 'UPDATE_ANNOTATION';
 export const DELETE_ANNOTATION = 'DELETE_ANNOTATION';
 export const CREATE_ANNOTATION = 'CREATE_ANNOTATION';
 export const MOVE_ANNOTATION = 'MOVE_ANNOTATION';
+export const SET_TITLE = 'SET_TITLE';
+export const SET_SETTINGS = 'SET_SETTINGS';
 
 /*
  * action creators
@@ -35,4 +37,12 @@ export function createAnnotation(newIndex) {
 
 export function moveAnnotation(fromIndex, toIndex) {
   return { type: MOVE_ANNOTATION, fromIndex, toIndex };
+}
+
+export function setTitle(title) {
+  return { type: SET_TITLE, title };
+}
+
+export function setSettings(settings) {
+  return { type: SET_SETTINGS, settings };
 }

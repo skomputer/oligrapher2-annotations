@@ -13,6 +13,10 @@
   margin-bottom: 5px;
 }
 
+#oligrapherTitleInput {
+  width: 100%;
+}
+
 #oligrapherByLine {
   margin-right: 18px;
 }
@@ -36,6 +40,29 @@
   display: inline-block;
 }
 
+#oligrapherMetaButtons {
+  position: absolute;
+  top: 85px;
+  left: 15px;
+}
+
+#oligrapherMetaButtons {
+  position: absolute;
+  top: 85px;
+  left: 15px;
+}
+
+#oligrapherMetaButtons button {
+  display: block;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 32px;
+  padding-top: 7px;
+  margin-bottom: 10px;
+}
+
+/*
+
 #oligrapherEditButton {
   position: absolute;
   top: 85px;
@@ -49,7 +76,7 @@
 
 #oligrapherSaveButton {
   position: absolute;
-  top: 128px;
+  top: 170px;
   left: 15px;
   border: 1px solid #ccc;
   background-color: rgba(255, 255, 255, 0.8);
@@ -57,13 +84,22 @@
   padding-top: 7px;
 }
 
-#oligrapherShowAnnotations {
-  margin-top: 5px;
-  float: right;
-}
+#oligrapherSettingsButton {
+  position: absolute;
+  top: 128px;
+  left: 15px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 32px;
+  padding-top: 7px;
+} 
+
+*/
 
 #oligrapherShowAnnotations button {
-  margin-right: 10px;
+  position: absolute;
+  top: 5px;
+  right: 25px;
   font-size: 24px;
   font-weight: 200;
 }
@@ -168,4 +204,14 @@
 
 #oligrapherGraphAnnotationFormText {
   height: 400px;
+}
+
+#oligrapherSettingsForm {
+  position: absolute;
+  display: inline-block;
+  z-index: 20;
+  top: 15px;
+  right: 15px;
+  margin: 0 auto;
+  text-align: right;
 }

@@ -4,7 +4,7 @@ export default class GraphTitle extends Component {
 
   render() {
     return (
-      <h1 id="oligrapherTitle">{this.props.graph.title}</h1>
+      <h1 id="oligrapherTitle">{this.props.title}</h1>
     );
   }
 }
