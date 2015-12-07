@@ -261,8 +261,10 @@ export default class Root extends BaseComponent {
   _handleSave() {
     if (this.props.onSave) {
       this.props.onSave({
+        title: this.props.graphTitle,
         graph: Graph.clearHighlights(this.state.graph),
-        annotations: this.props.annotations
+        annotations: this.props.annotations,
+        settings: this.props.graphSettings
       });
     }
   }
