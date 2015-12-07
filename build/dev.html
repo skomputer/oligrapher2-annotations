@@ -25,7 +25,7 @@
       var annotations = data.annotations;
 
       var root = document.getElementById('annotations');
-      root.style.height = window.innerHeight - 10 + "px";
+      root.style.height = window.innerHeight - 120 + "px";
 
       var oliAnnotations = new OligrapherAnnotations({
         domRoot: root,
@@ -50,6 +50,7 @@
           { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
         ]
       });
+      oliAnnotations.editor.toggleEditTools(true);
     </script>
   </body>
 </html>
