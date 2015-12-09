@@ -27,12 +27,13 @@ export default class Root extends BaseComponent {
       navList: false, 
       showAnnotations: true, 
       showEditTools: false,
-      showSettings: false
+      showSettings: false,
+      showSaveButton: !!props.onSave
     };
   }
 
   render() {
-    let { graph, editForm, isEditor, navList, showAnnotations, showSettings } = this.state;
+    let { graph, editForm, isEditor, navList, showAnnotations, showSettings, showSaveButton } = this.state;
     let { dispatch, annotation, annotations, currentIndex, user, date, links } = this.props;
     let title = this.props.graphTitle;
     let settings = this.props.graphSettings;
@@ -89,9 +90,9 @@ export default class Root extends BaseComponent {
               <div id="oligrapherGraphContainer">
                 <div id="oligrapherGraph"></div>
                 <div id="oligrapherMetaButtons">
-                  { isEditor ? <EditButton toggle={() => this._toggleEditTools()} /> : null }
+                  { isEditor ? <EditButton toggle={() => this.toggleEditTools()} /> : null }
                   { isEditor && hasSettings ? <SettingsButton settings={settings} toggleSettings={toggleSettings} /> : null }
-                  { isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
+                  { showSaveButton && isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
                 </div>
                 { showSettings && hasSettings ? <GraphSettingsForm settings={settings} updateSettings={updateSettings} /> : null }
               </div>
@@ -169,7 +170,14 @@ export default class Root extends BaseComponent {
     }
 
     this.editor = new this.props.editor(config);
-    this.setState({ graph: this.editor.oligrapher.export(), isEditor: this.props.isEditor, navList: navList });
+    this.setState({ 
+      graph: this.editor.oligrapher.export(), 
+      isEditor: this.props.isEditor, 
+      showEditTools: this.props.isEditor,
+      navList: navList 
+    });
+
+    this.editor.toggleEditTools(this.props.isEditor);
 
     if (hasAnnotations) {
       this.props.dispatch(loadAnnotations(this.props.annotationsData));
@@ -250,8 +258,10 @@ export default class Root extends BaseComponent {
   }
 
   toggleEditor(value) {
+    value = (typeof value !== "undefined") ? value : !this.state.isEditor;
     this.setState({ isEditor: value });
     this.editor.toggleEditor(value);
+    this.toggleEditTools(value);
   }
 
   toggleLocked(value) {
@@ -269,7 +279,7 @@ export default class Root extends BaseComponent {
     }
   }
 
-  _toggleEditTools(value) {
+  toggleEditTools(value) {
     value = (typeof value !== "undefined") ? value : !this.state.showEditTools;
     this.editor.toggleEditTools(value);
     this.setState({ showEditTools: value, showSettings: false });
@@ -285,6 +295,11 @@ export default class Root extends BaseComponent {
   _toggleSettings() {
     this.editor.toggleEditTools(false);
     this.setState({ showSettings: !this.state.showSettings, showEditTools: false });
+  }
+
+  toggleSaveButton(value) {
+    value = (typeof value !== "undefined") ? value : !this.state.showSaveButton;
+    this.setState({ showSaveButton: value });
   }
 }
 

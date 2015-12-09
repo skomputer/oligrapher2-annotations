@@ -40,6 +40,14 @@ export default class OligrapherAnnotations {
   toggleEditor(value) {
     this.root.getWrappedInstance().toggleEditor(value);
   }
+
+  toggleEditTools(value) {
+    this.root.getWrappedInstance().toggleEditTools(value);
+  }
+
+  toggleSaveButton(value) {
+    this.root.getWrappedInstance().toggleSaveButton(value);
+  }
 };
 
 window.OligrapherAnnotations = OligrapherAnnotations;
