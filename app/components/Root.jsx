@@ -138,7 +138,7 @@ export default class Root extends BaseComponent {
               </button>
             </div> : null }
           { showSaveButton && isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
-          { showHelpScreen ? <HelpScreen source={this.props.dataSource} /> : null }
+          { showHelpScreen ? <HelpScreen source={this.props.dataSource} close={() => this.toggleHelpScreen(false)} /> : null }
         </HotKeys>
       </div>
     );

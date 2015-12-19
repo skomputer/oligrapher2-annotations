@@ -230,3 +230,10 @@
 #oligrapherHelpScreen h3 {
   margin-top: 0;
 }
+
+#oligrapherHelpScreenCloseButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #888;
+}
