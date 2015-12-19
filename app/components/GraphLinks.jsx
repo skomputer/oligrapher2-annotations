@@ -15,7 +15,7 @@ export default class GraphLinks extends Component {
   }
 
   _getLink(link, i) {
-    return <a key={i} id={link.id} href={link.url} target={link.target || "_blank"}>{link.text}</a>;
+    return <a key={i} id={link.id} href={link.url} target={link.target}>{link.text}</a>;
   }
 
   _postLink(link, i) {

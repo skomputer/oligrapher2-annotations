@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { showAnnotation } from './actions';
 import Root from './components/Root';
 import reducers from './reducers';
 
@@ -27,8 +28,13 @@ export default class OligrapherAnnotations {
     return this.root.getWrappedInstance().props.annotation;
   }
 
+  showAnnotation(index) {
+    this.root.dispatchProps.dispatch(showAnnotation(index));
+  }
+
   export() {
     let instance = this.root.getWrappedInstance();
+
     return {
       title: instance.props.graphTitle,
       graph: instance.graphWithoutHighlights(),

@@ -9,9 +9,11 @@ import BaseComponent from './BaseComponent';
 import SaveButton from './SaveButton';
 import EditButton from './EditButton';
 import SettingsButton from './SettingsButton';
+import HelpButton from './HelpButton';
 import GraphHeader from './GraphHeader';
 import GraphAnnotations from './GraphAnnotations';
 import GraphSettingsForm from './GraphSettingsForm';
+import HelpScreen from './HelpScreen';
 import Graph from '../models/Graph';
 
 import { merge, cloneDeep, isNumber, keys, pick } from 'lodash';
@@ -28,13 +30,15 @@ export default class Root extends BaseComponent {
       showAnnotations: true, 
       showEditTools: false,
       showSettings: false,
-      showSaveButton: !!props.onSave
+      showSaveButton: !!props.onSave,
+      showHelpScreen: false
     };
   }
 
   render() {
-    let { graph, editForm, isEditor, navList, showAnnotations, showSettings, showSaveButton } = this.state;
-    let { dispatch, annotation, annotations, currentIndex, user, date, links } = this.props;
+    let { dispatch, annotation, annotations, currentIndex, user, date, links, url } = this.props;
+    let { graph, editForm, isEditor, navList, showAnnotations, 
+          showSettings, showSaveButton, showEditTools, showHelpScreen } = this.state;
     let title = this.props.graphTitle;
     let settings = this.props.graphSettings;
     let hasSettings = settings && Object.keys(settings).length > 0;
@@ -49,7 +53,10 @@ export default class Root extends BaseComponent {
     let swapEditForm = () => this._swapEditForm();
     let swapList = () => this._swapNavList();
     let show = (id) => this._show(id);
-    let create = () => dispatch(createAnnotation(this.props.annotations.length));
+    let create = () => { 
+      dispatch(createAnnotation(this.props.annotations.length)); 
+      this.toggleEditTools(false); 
+    };
     let move = (from, to) => dispatch(moveAnnotation(from, to));
     let swapAnnotations = () => this._swapAnnotations();
     let updateTitle = (title) => dispatch(setTitle(title));
@@ -58,14 +65,20 @@ export default class Root extends BaseComponent {
 
     let keyMap = {
       'altE': 'alt+e',
+      'altM': ['alt+m', 'ctrl+m'],
+      'altH': ['alt+h', 'ctrl+h'],
       'left': 'left',
-      'right': 'right'
+      'right': 'right',
+      'esc': 'esc'
     };
 
     let keyHandlers = {
-      'altE': () => this._swapEditForm(),
+      'altE': () => { isEditor ? this._swapEditForm() : null },
+      'altM': () => { isEditor ? this.toggleEditTools() : null },
+      'altH': () => { isEditor ? this.toggleHelpScreen() : null },
       'left': () => this._show(prevId),
-      'right': () => this._show(nextId)
+      'right': () => this._show(nextId),
+      'esc': () => this.toggleHelpScreen(false)
     };
 
     let hasAnnotations = (isEditor || annotations.length > 0);
@@ -82,6 +95,7 @@ export default class Root extends BaseComponent {
                   swapAnnotations={swapAnnotations}
                   graph={graph}
                   title={title}
+                  url={url}
                   updateTitle={updateTitle}
                   user={user}
                   date={date}
@@ -90,9 +104,9 @@ export default class Root extends BaseComponent {
               <div id="oligrapherGraphContainer">
                 <div id="oligrapherGraph"></div>
                 <div id="oligrapherMetaButtons">
-                  { isEditor ? <EditButton toggle={() => this.toggleEditTools()} /> : null }
+                  { isEditor ? <EditButton toggle={() => this.toggleEditTools()} showEditTools={showEditTools} /> : null }
                   { isEditor && hasSettings ? <SettingsButton settings={settings} toggleSettings={toggleSettings} /> : null }
-                  { showSaveButton && isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
+                  { isEditor ? <HelpButton toggleHelpScreen={() => this.toggleHelpScreen()} /> : null }
                 </div>
                 { showSettings && hasSettings ? <GraphSettingsForm settings={settings} updateSettings={updateSettings} /> : null }
               </div>
@@ -114,7 +128,8 @@ export default class Root extends BaseComponent {
                 move={move}
                 remove={remove}
                 editForm={editForm}
-                swapEditForm={swapEditForm} /> : null }
+                swapEditForm={swapEditForm} 
+                hideEditTools={() => this.toggleEditTools(false)} /> : null }
           </div>
           { !showAnnotations && hasAnnotations ? 
             <div id="oligrapherShowAnnotations">
@@ -122,6 +137,8 @@ export default class Root extends BaseComponent {
                 <span className="glyphicon glyphicon-font"></span>
               </button>
             </div> : null }
+          { showSaveButton && isEditor && this.props.onSave ? <SaveButton save={() => this._handleSave()} /> : null }
+          { showHelpScreen ? <HelpScreen source={this.props.dataSource} /> : null }
         </HotKeys>
       </div>
     );
@@ -144,8 +161,9 @@ export default class Root extends BaseComponent {
       domRoot: graphElement, 
       data: this.props.graphData, 
       viewOnlyHighlighted: !isEditor,
-      showEditButton: false
-    }, pick(this.props, ['oligrapher', 'dataSource', 'isEditor', 'isLocked']));
+      showEditButton: false,
+      hideHelp: true
+    }, pick(this.props, ['oligrapher', 'dataSource', 'isEditor', 'isLocked', 'graphHeight']));
 
     // pre-apply initial highlights to initial data so that it doesn't start with animated transition
     if (hasAnnotations) {
@@ -170,6 +188,7 @@ export default class Root extends BaseComponent {
     }
 
     this.editor = new this.props.editor(config);
+
     this.setState({ 
       graph: this.editor.oligrapher.export(), 
       isEditor: this.props.isEditor, 
@@ -207,6 +226,10 @@ export default class Root extends BaseComponent {
       this.editor.oligrapher.clearHighlights();
     }
 
+    if (this.props.onNav && this.props.currentIndex !== prevProps.currentIndex) {
+      this.props.onNav(this.props.currentIndex);
+    }
+
     this._lockOrUnlockEditor(this.state.showEditTools, this.props.annotation);
   }
 
@@ -214,7 +237,8 @@ export default class Root extends BaseComponent {
     let element = ReactDOM.findDOMNode(this);
     let headerElement = element.querySelector("#oligrapherHeader")
     let graphElement = element.querySelector("#oligrapherGraph");
-    let height = headerElement ? (element.offsetHeight - headerElement.offsetHeight) : element.offsetHeight;
+    let headerHeight = headerElement ? headerElement.offsetHeight : 0;
+    let height = element.offsetHeight - headerHeight;
     graphElement.style.height = height + "px";
   }
 
@@ -272,7 +296,7 @@ export default class Root extends BaseComponent {
     if (this.props.onSave) {
       this.props.onSave({
         title: this.props.graphTitle,
-        graph: Graph.clearHighlights(this.state.graph),
+        graph: this.graphWithoutHighlights(),
         annotations: this.props.annotations,
         settings: this.props.graphSettings
       });
@@ -289,7 +313,8 @@ export default class Root extends BaseComponent {
   }
 
   _lockOrUnlockEditor(showEditTools, hasAnnotations) {
-    this.editor.toggleLocked(!showEditTools && !hasAnnotations);    
+    // graph should be locked if not in editor mode or if edit tools are hidden and no annotations
+    this.editor.toggleLocked(!this.state.isEditor || (!showEditTools && !hasAnnotations));
   }
 
   _toggleSettings() {
@@ -300,6 +325,10 @@ export default class Root extends BaseComponent {
   toggleSaveButton(value) {
     value = (typeof value !== "undefined") ? value : !this.state.showSaveButton;
     this.setState({ showSaveButton: value });
+  }
+
+  toggleHelpScreen() {
+    this.setState({ showHelpScreen : !this.state.showHelpScreen });
   }
 }
 

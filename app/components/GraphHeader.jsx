@@ -8,11 +8,11 @@ export default class GraphHeader extends Component {
 
   render() {
     let { showAnnotations, hasAnnotations, swapAnnotations, 
-          user, date, links, title, isEditor, updateTitle } = this.props;
+          user, date, links, title, isEditor, updateTitle, url } = this.props;
 
     return (
       <div id="oligrapherHeader">
-        { isEditor ? <GraphTitleForm title={title} updateTitle={updateTitle} /> : <GraphTitle title={title} /> }
+        { isEditor ? <GraphTitleForm title={title} updateTitle={updateTitle} /> : <GraphTitle title={title} url={url} /> }
         { user || date ? <GraphByLine user={user} date={date} /> : null }
         { links ? <GraphLinks links={links} /> : null}
       </div>

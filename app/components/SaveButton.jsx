@@ -4,8 +4,11 @@ export default class SaveButton extends Component {
 
   render() {
     return (
-      <button id="oligrapherSaveButton" className="btn btn-sm btn-default" onClick={this.props.save}>
-        <span className="glyphicon glyphicon-save"></span>
+      <button 
+        id="oligrapherSaveButton" 
+          className="btn btn-lg btn-default"
+          onClick={this.props.save}>
+        Save
       </button>
     );
   }

@@ -4,7 +4,7 @@ export default class GraphTitleForm extends Component {
 
   render() {
     return (
-      <h1>
+      <h1 id="oligrapherTitle" className="oligrapherTitleInput">
         <input 
           ref="title"
           id="oligrapherTitleInput" 

@@ -39,6 +39,10 @@ export default class GraphAnnotationList extends BaseComponent {
 
   _handleClick(e) {
     this.props.show(parseInt(e.target.dataset.id));
+
+    if (this.props.isEditor) { 
+      this.props.hideEditTools();
+    };
   }
 
   _handleDragStart(e) {

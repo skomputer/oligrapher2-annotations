@@ -45,7 +45,8 @@ export default class GraphAnnotations extends Component {
         isEditor={isEditor}
         show={show} 
         create={create}
-        move={move} />
+        move={move} 
+        hideEditTools={this.props.hideEditTools} />
     );
 
     return (

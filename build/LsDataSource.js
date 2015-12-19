@@ -29,7 +29,7 @@
       alert('Giving up :( Cannot create an XMLHTTP instance');
       return false;
     }
-
+    
     httpRequest.onreadystatechange = function() {
       if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
@@ -44,13 +44,17 @@
 
     var fullUrl = url + (data ? "?" + toQueryString(data) : "")
 
+    httpRequest.onerror = function(error) {
+      console.log(error);
+    }
+
     httpRequest.open('GET', fullUrl);
     httpRequest.send();
   };
 
   var LsDataSource = {
     name: 'LittleSis',
-    baseUrl: 'http://littlesis.org',
+    baseUrl: 'https://littlesis.org',
 
     findNodes: function(text, callback) {
       get(
