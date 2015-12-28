@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { merge, pick } from 'lodash';
+import Editor from 'react-medium-editor';
 
 export default class GraphAnnotationForm extends BaseComponent {
   constructor(props) {
@@ -19,13 +20,12 @@ export default class GraphAnnotationForm extends BaseComponent {
           placeholder="annotation header"
           value={this.props.annotation.header}
           onChange={this._handleHeaderChange}></textarea>
-        <textarea 
+        <Editor
           id="oligrapherGraphAnnotationFormText"
-          ref="text"
-          className="form-control"
-          placeholder="annotation text"
-          value={this.props.annotation.text}
-          onChange={this._handleTextChange}></textarea>
+          text={this.state.text}
+          options={{ placeholder: { text: "annotation text" }}}
+          onChange={this._handleTextChange} 
+          onBlur={() => this.saveText()} />
         <button 
           className="btn btn-danger btn-sm" 
           onClick={this._handleRemove}>Remove</button>
@@ -49,15 +49,20 @@ export default class GraphAnnotationForm extends BaseComponent {
   }
 
   _handleHeaderChange(event) {
-    this._handleChange(event, 'header');
+    this.setState({ header: event.target.value });
+    this.props.update(this.props.index, { header: event.target.value, text: this.state.text });
   }
 
-  _handleTextChange(event) {
-    this._handleChange(event, 'text');
+  _handleTextChange(value, medium) {
+    this.setState({ text: value });
   }
 
-  _handleChange(event, field) {
-    this.setState({ [field]: event.target.value });
+  saveText() {
+    this.props.update(this.props.index, this.state);
+  }
+
+  _handleChange(field, value) {
+    this.setState({ [field]: value });
     this._apply();
   }
 
