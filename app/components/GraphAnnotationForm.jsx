@@ -21,16 +21,22 @@ export default class GraphAnnotationForm extends BaseComponent {
           value={this.props.annotation.header}
           onChange={this._handleHeaderChange}></textarea>
         <Editor
+          ref="editor"
           id="oligrapherGraphAnnotationFormText"
           text={this.state.text}
           options={{ placeholder: { text: "annotation text" }}}
-          onChange={this._handleTextChange} 
-          onBlur={() => this.saveText()} />
+          onChange={this._handleTextChange} />
         <button 
           className="btn btn-danger btn-sm" 
           onClick={this._handleRemove}>Remove</button>
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.refs.editor.medium.subscribe("blur", () => {
+      this.saveText();
+    });
   }
 
   componentWillReceiveProps(props) {
