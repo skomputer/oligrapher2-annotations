@@ -1,7 +1,7 @@
 # Oligrapher Annotations
 [Oligrapher](https://github.com/skomputer/oligrapher2) is a JavaScript app for visualizing network graphs. Oligrapher accepts graph data in a specific format and allows a user to design a nice-looking SVG rendering of the graph.
 
-The Oligrapher Annotations app is a UI for editing, annotating, and displaying Oligrapher graphs. It is build with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is easy to embed in a web page or web application.
+The Oligrapher Annotations app extends Oligrapher with a UI for editing, annotating, and displaying Oligrapher graphs. It is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is easy to embed in a web page or web application.
 
 The first version of Oligrapher was developed as part of [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
 
@@ -22,7 +22,7 @@ Point your browser to the repository's ```build/dev.html``` to view a sample gra
 Embed
 -----
 
-Examine ```build/index.html``` for an example of how to run Oligrapher Annotations in production.
+To embed the Annotations app in a web page, include the .js and .css files from the build directory in your page header and mount it in an HTML element. Examine ```build/index.html``` for an example.
 
 ```
 <!DOCTYPE html>
@@ -72,6 +72,17 @@ Examine ```build/index.html``` for an example of how to run Oligrapher Annotatio
 </html>
 ```
 
+Data Schema
+-----------
 
+Initial data can be provided to the app in two places, the ```graphData``` and ```annotationsData``` configuration options. If no data is provided at initialization the app will begin empty. Graph data should conform to the [Oligrapher data schema](https://github.com/skomputer/oligrapher2#data-schema), and annotations data is an ordered array of annotations.
 
+### Annotation Attributes
 
+- ```header:``` **(required)** a header to be displayed above the annotation
+- ```text:``` **(required)** the text body of the annotation, with optional HTML markup
+- ```nodeIds:``` **(required)** an array of ids of nodes to highlight from the underlying graph (can be empty)
+- ```edgeIds:``` **(required)** an array of ids of edges to highlight from the underlying graph (can be empty)
+- ```captionIds:``` **(required)** an array of ids of captions to highlight from the underlying graph (can be empty)
+
+If no node, edge, or captions are highlighted, the graph will have its normal appearance when viewing the annotation. If there are highlights, non-highlighted content will appear faded.
