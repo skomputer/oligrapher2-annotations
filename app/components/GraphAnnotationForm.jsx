@@ -11,6 +11,15 @@ export default class GraphAnnotationForm extends BaseComponent {
   }
 
   render() {
+    let editorOptions = { 
+      toolbar: { buttons: [
+        'bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist', 'orderedlist'
+      ] },
+      targetBlank: true, 
+      placeholder: { text: "annotation text" }
+    }
+
+
     return (
       <div id="oligrapherGraphAnnotationForm">
         <textarea
@@ -24,7 +33,7 @@ export default class GraphAnnotationForm extends BaseComponent {
           ref="editor"
           id="oligrapherGraphAnnotationFormText"
           text={this.state.text}
-          options={{ placeholder: { text: "annotation text" }}}
+          options={editorOptions}
           onChange={this._handleTextChange} />
         <button 
           className="btn btn-danger btn-sm" 
