@@ -5,8 +5,9 @@ import { Provider } from 'react-redux';
 import { showAnnotation } from './actions';
 import Root from './components/Root';
 import reducers from './reducers';
+require('./styles/oligrapher.annotations.css');
 
-export default class OligrapherAnnotations {
+class OligrapherAnnotations {
   constructor(config) {
     this.rootElement = config.domRoot;
     this.store = createStore(reducers);
@@ -56,5 +57,4 @@ export default class OligrapherAnnotations {
   }
 };
 
-window.OligrapherAnnotations = OligrapherAnnotations;
-
+module.exports = OligrapherAnnotations;

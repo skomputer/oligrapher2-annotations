@@ -15,8 +15,8 @@ import GraphAnnotations from './GraphAnnotations';
 import GraphSettingsForm from './GraphSettingsForm';
 import HelpScreen from './HelpScreen';
 import Graph from '../models/Graph';
-
 import { merge, cloneDeep, isNumber, keys, pick } from 'lodash';
+import OligrapherEditor from 'oligrapher2-editor';
 
 export default class Root extends BaseComponent {
   constructor(props) {
@@ -187,7 +187,7 @@ export default class Root extends BaseComponent {
       }
     }
 
-    this.editor = new this.props.editor(config);
+    this.editor = new OligrapherEditor(config);
 
     this.setState({ 
       graph: this.editor.oligrapher.export(), 

@@ -4,14 +4,9 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
     <title>Oligrapher 2 Annotations</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="oligrapher.css" rel="stylesheet"/>
-    <link href="oligrapher.editor.css" rel="stylesheet"/>
-    <link href="oligrapher.annotations.css" rel="stylesheet"/>
     <script src="http://localhost:7090/webpack-dev-server.js"></script>
     <script src="http://localhost:7090/build/vendors.js"></script>
     <script src="http://localhost:7090/build/oligrapher.annotations.js"></script>
-    <script src="oligrapher.min.js"></script>
-    <script src="oligrapher.editor.min.js"></script>
     <script src="oligrapher-annotations-example-data.js"></script>
     <script src="LsDataSource.js"></script>
     <style>
@@ -25,8 +20,6 @@
 
       var oliAnnotations = new OligrapherAnnotations({
         domRoot: root,
-        oligrapher: Oligrapher,
-        editor: OligrapherEditor,
         dataSource: LsDataSource,
         title: oligrapherAnnotationsData.title,
         graphData: oligrapherAnnotationsData.graph, 
