@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { showAnnotation } from './actions';
 import Root from './components/Root';
 import reducers from './reducers';
+require('./styles/bootstrap-3.3.5.min.css');
 require('./styles/oligrapher.annotations.css');
 
 class OligrapherAnnotations {
