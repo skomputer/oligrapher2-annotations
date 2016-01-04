@@ -22,20 +22,14 @@ Point your browser to the repository's ```build/dev.html``` to view a sample gra
 Embed
 -----
 
-To embed the Annotations app in a web page, include the .js and .css files from the build directory in your page header and mount it in an HTML element. Examine ```build/index.html``` for an example.
+To embed the Annotations app in a web page, include the .js file from the build directory in your page header and mount the app in an HTML element. Examine ```build/index.html``` for an example.
 
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
-    <title>Oligrapher 2 Annotations</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="oligrapher.css" rel="stylesheet"/>
-    <link href="oligrapher.editor.css" rel="stylesheet"/>
-    <link href="oligrapher.annotations.css" rel="stylesheet"/>
-    <script src="oligrapher.min.js"></script>
-    <script src="oligrapher.editor.min.js"></script>
+    <title>Oligrapher 2 Annotations Demo</title>
     <script src="oligrapher.annotations.min.js"></script>
     <script src="oligrapher-annotations-example-data.js"></script>
     <script src="LsDataSource.js"></script>
@@ -46,12 +40,8 @@ To embed the Annotations app in a web page, include the .js and .css files from 
     <div id="annotations"></div>
     <script>
       var root = document.getElementById('annotations');
-      root.style.height = window.innerHeight - 120 + "px";
-
-      var oliAnnotations = new OligrapherAnnotations({
+      var app = new OligrapherAnnotations({
         domRoot: root,
-        oligrapher: Oligrapher,
-        editor: OligrapherEditor,
         dataSource: LsDataSource,
         graphData: oligrapherAnnotationsData.graph, 
         annotationsData: oligrapherAnnotationsData.annotations,
@@ -86,3 +76,33 @@ Initial data can be provided to the app in two places, the ```graphData``` and `
 - ```captionIds:``` **(required)** an array of ids of captions to highlight from the underlying graph (can be empty)
 
 If no node, edge, or captions are highlighted, the graph will have its normal appearance when viewing the annotation. If there are highlights, non-highlighted content will appear faded.
+
+API
+---
+
+### ```constructor(config)```
+Returns an Oligrapher Annotations instance within a specified ```root``` DOM element and accepts other configuration options.
+
+- ```domRoot:``` **(required)** a DOM element to mount the app inside of
+
+```javascript
+var root = document.getElementById('annotations');
+var app = new OligrapherAnnotations({
+  domRoot: root,
+  dataSource: LsDataSource,
+  title: oligrapherAnnotationsData.title,
+  graphData: oligrapherAnnotationsData.graph, 
+  annotationsData: oligrapherAnnotationsData.annotations,
+  user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+  date: "August 30, 2015",
+  startIndex: 0,
+  isEditor: true,
+  onSave: function(data) { console.log(data); },
+  onNav: function(index) { console.log("navigating to annotation " + String(index)); },
+  links: [
+    { text: "some", url: "http://some.net" },
+    { id: "exampleLink", text: "example", url: "http://example.com" },
+    { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
+  ]
+});
+```
