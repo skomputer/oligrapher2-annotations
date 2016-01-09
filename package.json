@@ -1,31 +1,31 @@
 {
   "name": "oligrapher2-annotations",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "Annotations UI for Oligrapher 2",
   "main": "build/oligrapher.annotations.js",
   "scripts": {
     "dev-build": "npm run && webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 7090 --config webpack.dev.config",
     "prod-build": "webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.annotations.js",
     "min-build": "webpack -p --display-modules --config webpack.prod.config.js --output-filename=oligrapher.annotations.min.js",
+    "build-all": "npm run prod-build && npm run min-build",
     "test": "jest"
   },
   "author": "Matthew Skomarovsky",
-  "license": "gpl",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skomputer/oligrapher2-annotations.git"
+  },
   "bugs": {
     "url": "https://github.com/skomputer/oligrapher2-annotations/issues"
   },
   "homepage": "https://github.com/skomputer/oligrapher2-annotations/",
   "dependencies": {
-    "babel": "^5.4.7",
-    "babel-core": "^5.4.7",
-    "babel-loader": "^5.1.3",
     "lodash": "^3.10.1",
     "oligrapher2-editor": "^0.1",
-    "pushstate-server": "^1.6.0",
     "react": "^0.14",
     "react-anything-sortable": "^1.1.0",
     "react-dom": "^0.14",
-    "react-hot-loader": "^1.3.0",
     "react-hotkeys": "^0.7.0",
     "react-medium-editor": "^1.6.1",
     "react-redux": "^4.0.0",
@@ -34,10 +34,14 @@
     "titleize": "^1.0.0"
   },
   "devDependencies": {
+    "babel": "^5.4.7",
+    "babel-core": "^5.4.7",
     "babel-jest": "^5.3.0",
+    "babel-loader": "^5.1.3",
     "css-loader": "^0.23.1",
     "jest-cli": "^0.7.1",
     "react-addons-test-utils": "^0.14.2",
+    "react-hot-loader": "^1.3.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.4",
