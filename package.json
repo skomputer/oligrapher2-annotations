@@ -1,12 +1,12 @@
 {
   "name": "oligrapher2-annotations",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Annotations UI for Oligrapher 2",
   "main": "build/oligrapher.annotations.js",
   "scripts": {
     "dev-build": "npm run && webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 7090 --config webpack.dev.config",
     "prod-build": "webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.annotations.js",
-    "min-build": "webpack -p --display-modules --config webpack.prod.config.js --output-filename=oligrapher.annotations.min.js",
+    "min-build": "webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.annotations.min.js",
     "build-all": "npm run prod-build && npm run min-build",
     "test": "jest"
   },
@@ -31,7 +31,8 @@
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
     "shortid": "^2.2.4",
-    "titleize": "^1.0.0"
+    "titleize": "^1.0.0",
+    "url-loader": "^0.5.7"
   },
   "devDependencies": {
     "babel": "^5.4.7",

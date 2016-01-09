@@ -23,10 +23,11 @@ var config = {
   module: {
     loaders: [
       { test: /\.jsx?$/,
-        exclude: [node_modules],
+        exclude: /node_modules\/(?!oligrapher)/i,
         loaders: ['react-hot', 'babel'] },
       { test: /\.css$/, 
-        loader: "style-loader!css-loader" }
+        loader: "style-loader!css-loader" },
+      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=30000' }
     ],
     noParse:[]
   },
